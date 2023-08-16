@@ -9,9 +9,7 @@ class Employee extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['full_name', 'position', 'hire_date', 'phone_number', 'email', 'salary', 'photo',];
-
-    // app/Models/Employee.php
+    protected $fillable = ['first_name', 'last_name', 'surname', 'position', 'hire_date', 'phone_number', 'email', 'salary', 'photo',];
 
     public function manager()
     {
