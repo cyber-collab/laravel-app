@@ -28,3 +28,7 @@ Route::resource('employees', EmployeeController::class);
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('admin/employees', AdminController::class);
 });
+
+Route::group(['middleware' => ['role:admin']], function () {
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+});
