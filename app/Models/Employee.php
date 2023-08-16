@@ -10,4 +10,17 @@ class Employee extends Model
     use HasFactory;
 
     protected $fillable = ['full_name', 'position', 'hire_date', 'phone_number', 'email', 'salary', 'photo',];
+
+    // app/Models/Employee.php
+
+    public function manager()
+    {
+        return $this->belongsTo(Employee::class, 'manager_id');
+    }
+
+    public function subordinates()
+    {
+        return $this->hasMany(Employee::class, 'manager_id');
+    }
+
 }
