@@ -25,10 +25,8 @@ Route::get('/home', [\App\Http\Controllers\Admin\HomeController::class, 'index']
 
 Route::resource('employees', EmployeeController::class);
 
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::resource('admin/employees', AdminController::class);
+Route::middleware(['role:admin'])->prefix('admin_panel')->group(function () {
+    Route::get('/', [App\Http\Controllers\Admin\HomeController::class, 'index'])->name('homeAdmin');
 });
 
-Route::middleware(['role:admin'])->prefix('admin_panel')->group(function () {
-    Route::get('/', [App\Http\Controllers\Admin\HomeController::class, 'index'])->name('homeAdmin'); // /admin
-});
+Route::get('/employees/datatables', [EmployeeController::class, 'getDatatables'])->name('employees.index.datatables');
