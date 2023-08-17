@@ -24,7 +24,6 @@
                 <th>Phone</th>
                 <th>Email</th>
                 <th>The amount of wages</th>
-                <th>Actions</th>
             </tr>
             </thead>
             <tbody>

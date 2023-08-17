@@ -11,6 +11,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\Datatables;
 
 class EmployeeController extends Controller
@@ -22,26 +23,10 @@ class EmployeeController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            return $this->getEmployeesData();
+            return Employee::getEmployeesData();
         }
 
         return view('employees.index');
-    }
-
-    private function getEmployeesData()
-    {
-        $data = Employee::select(['id', 'name', 'position', 'hire_date', 'phone_number', 'email', 'salary']);
-        return Datatables::of($data)
-            ->addIndexColumn()
-            ->addColumn('action', function ($row) {
-                if ( $this->middleware['role:admin'] ) {
-                    $actionBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a>' .
-                        '<a href="javascript:void(0)" class="delete btn btn-danger btn-sm" data-id="' . $row->id . '">Delete</a>';
-                    return $actionBtn;
-                }
-            })
-            ->rawColumns(['action'])
-            ->make(true);
     }
 
     public function create()
