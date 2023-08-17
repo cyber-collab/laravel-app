@@ -31,13 +31,14 @@ class EmployeeController extends Controller
     private function getEmployeesData()
     {
         $data = Employee::select(['id', 'name', 'position', 'hire_date', 'phone_number', 'email', 'salary']);
-
         return Datatables::of($data)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                $actionBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a>' .
-                    '<a href="javascript:void(0)" class="delete btn btn-danger btn-sm" data-id="' . $row->id . '">Delete</a>';
-                return $actionBtn;
+                if ( $this->middleware['role:admin'] ) {
+                    $actionBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a>' .
+                        '<a href="javascript:void(0)" class="delete btn btn-danger btn-sm" data-id="' . $row->id . '">Delete</a>';
+                    return $actionBtn;
+                }
             })
             ->rawColumns(['action'])
             ->make(true);
@@ -57,7 +58,9 @@ class EmployeeController extends Controller
 
     public function show(Employee $employee)
     {
-        // Відобразити інформацію про конкретного співробітника
+        $employee = new EmployeeResource($employee);
+
+        return view('employees.show', compact('employee'));
     }
 
     public function edit(Employee $employee)

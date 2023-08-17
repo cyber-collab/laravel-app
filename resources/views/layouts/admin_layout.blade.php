@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Admin dashboard- @yield('title')</title>
 
     <!-- Google Font: Source Sans Pro -->
@@ -96,18 +97,18 @@
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
-{{--                        <ul class="nav nav-treeview">--}}
-{{--                            <li class="nav-item">--}}
-{{--                                <a href="{{ route('category.index') }}" class="nav-link">--}}
-{{--                                    <p>Все категории</p>--}}
-{{--                                </a>--}}
-{{--                            </li>--}}
-{{--                            <li class="nav-item">--}}
-{{--                                <a href="{{ route('category.create') }}" class="nav-link">--}}
-{{--                                    <p>Добавить категорию</p>--}}
-{{--                                </a>--}}
-{{--                            </li>--}}
-{{--                        </ul>--}}
+                        {{--                        <ul class="nav nav-treeview">--}}
+                        {{--                            <li class="nav-item">--}}
+                        {{--                                <a href="{{ route('category.index') }}" class="nav-link">--}}
+                        {{--                                    <p>Все категории</p>--}}
+                        {{--                                </a>--}}
+                        {{--                            </li>--}}
+                        {{--                            <li class="nav-item">--}}
+                        {{--                                <a href="{{ route('category.create') }}" class="nav-link">--}}
+                        {{--                                    <p>Добавить категорию</p>--}}
+                        {{--                                </a>--}}
+                        {{--                            </li>--}}
+                        {{--                        </ul>--}}
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link" onclick="document.getElementById('logout-form').submit()">
@@ -128,7 +129,28 @@
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-        @yield('content')
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">List of employees</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered" id="employees-table" data-url="{{ route('employees.index') }}">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Date of employment</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>The amount of wages</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     <!-- /.content-wrapper -->
 
@@ -176,11 +198,12 @@
 <script src="/admin/dist/js/demo.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="/admin/dist/js/pages/dashboard.js"></script>
-<script type="text/javascript" src="/admin/dist/js/jquery.colorbox-min.js"></script>
 <script src="https://cdn.tiny.cloud/1/jxsqeq85qzdwuqqqruya91jqsrhqtxykhxtks6sn0t1kn69g/tinymce/5/tinymce.min.js"
         referrerpolicy="origin"></script>
-<script type="text/javascript" src="/packages/barryvdh/elfinder/js/standalonepopup.js"></script>
 <script src="/admin/admin.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="{{ asset('js/employees.js') }}"></script>
 </body>
 
 </html>

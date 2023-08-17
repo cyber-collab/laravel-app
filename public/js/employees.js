@@ -6,7 +6,14 @@ $(function () {
         serverSide: true,
         ajax: $('#employees-table').data('url'),
         columns: [
-            { data: 'name', name: 'name' },
+            { data: 'name', name: 'name',
+                render: function (data, type, row ) {
+                    if (type === 'display') {
+                        data = '<a href="/employees/' + row.id + '">' + data + '</a>';
+                    }
+                    return data;
+                }
+            },
             { data: 'position', name: 'position' },
             { data: 'hire_date', name: 'hire_date' },
             { data: 'phone_number', name: 'phone_number' },
@@ -18,21 +25,22 @@ $(function () {
 
     $('#employees-table').on('click', '.delete', function () {
         let employeeId = $(this).data('id');
-
-        if (confirm('Ви впевнені, що хочете видалити цього співробітника?')) {
-            $.ajax({
-                url: '/employees/' + employeeId,
-                type: 'DELETE',
-                data: {
-                    "_token": csrfToken,
-                },
-                success: function (data) {
-                    table.draw();
-                },
-                error: function (data) {
-                    console.log('Error:', data);
-                }
-            });
+        if (adminlte) {
+            if (confirm('Ви впевнені, що хочете видалити цього співробітника?')) {
+                $.ajax({
+                    url: '/employees/' + employeeId,
+                    type: 'DELETE',
+                    data: {
+                        "_token": csrfToken,
+                    },
+                    success: function (data) {
+                        table.draw();
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+            }
         }
     });
 });
