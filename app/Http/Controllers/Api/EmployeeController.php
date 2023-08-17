@@ -7,7 +7,6 @@ use App\Models\Employee;
 use App\Http\Resources\EmployeeResource;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\Datatables;
-use function Psy\debug;
 
 class EmployeeController extends Controller
 {

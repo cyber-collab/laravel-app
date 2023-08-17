@@ -14,9 +14,7 @@ class EmployeeFactory extends Factory
     public function definition()
     {
         return [
-            'first_name' => $this->faker->firstName,
-            'last_name' => $this->faker->lastName,
-            'surname' => $this->faker->name,
+            'name' => $this->faker->name,
             'position' => $this->faker->jobTitle,
             'hire_date' => $this->faker->date,
             'phone_number' => $this->faker->phoneNumber,
