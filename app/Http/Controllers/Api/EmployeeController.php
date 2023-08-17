@@ -5,28 +5,42 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use App\Http\Resources\EmployeeResource;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Yajra\DataTables\Facades\Datatables;
 
 class EmployeeController extends Controller
 {
-    public function index( Request $request)
+    /**
+     * @param Request $request
+     * @return Application|Factory|View
+     */
+    public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Employee::select('*');
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action', function($row){
-                    $actionBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
-                    return $actionBtn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+            return $this->getEmployeesData();
         }
 
-        $employees = EmployeeResource::collection(Employee::all());
+        return view('employees.index');
+    }
 
-        return view('employees.index', compact('employees'));
+    private function getEmployeesData()
+    {
+        $data = Employee::select(['id', 'name', 'position', 'hire_date', 'phone_number', 'email', 'salary']);
+
+        return Datatables::of($data)
+            ->addIndexColumn()
+            ->addColumn('action', function ($row) {
+                $actionBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a>' .
+                    '<a href="javascript:void(0)" class="delete btn btn-danger btn-sm" data-id="' . $row->id . '">Delete</a>';
+                return $actionBtn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
     public function create()
@@ -56,20 +70,15 @@ class EmployeeController extends Controller
         // Оновити інформацію про співробітника в базі даних
     }
 
+    /**
+     * @param Employee $employee
+     * @return Application|ResponseFactory|Response
+     */
     public function destroy(Employee $employee)
     {
-        // Видалити співробітника з бази даних
+        $employee->delete();
+
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 
-    public function getDatatables()
-    {
-        $employees = Employee::select(['id', 'first_name', 'last_name', 'position', 'hire_date', 'phone_number', 'email', 'salary'])
-            ->get()
-            ->map(function ($employee) {
-                $employee->full_name = $employee->first_name . ' ' . $employee->last_name;
-                return $employee;
-            });
-
-        return datatables()->of($employees)->toJson();
-    }
 }
