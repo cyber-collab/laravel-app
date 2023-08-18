@@ -82,9 +82,9 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('employees.create') }}" class="nav-link">
-                                    <p>Add new</p>
-                                </a>
+                                <div align="right">
+                                    <button type="button" name="create_record" id="create_record" class="btn btn-success"> <i class="bi bi-plus-square"></i> Add</button>
+                                </div>
                             </li>
                         </ul>
                     </li>
@@ -151,6 +151,75 @@
                 </table>
             </div>
         </div>
+        <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" id="sample_form" class="form-horizontal" data-url="{{ route('employees.store') }}">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ModalLabel">Add New Employee</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <span id="form_result"></span>
+                            <div class="form-group">
+                                <label>Name:</label>
+                                <input type="text" name="name" id="name" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label>Position:</label>
+                                <input type="text" name="position" id="position" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label>Date of Employment:</label>
+                                <input type="date" name="hire_date" id="hire_date" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label>Phone:</label>
+                                <input type="text" name="phone_number" id="phone_number" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label>Email:</label>
+                                <input type="email" name="email" id="email" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label>Salary:</label>
+                                <input type="text" name="salary" id="salary" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label>Photo:</label>
+                                <input type="file" name="photo" id="photo" class="form-control" />
+                            </div>
+                            <input type="hidden" name="action" id="action" value="Add" />
+                            <input type="hidden" name="hidden_id" id="hidden_id" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <input type="submit" name="action_button" id="action_button" value="Add" class="btn btn-info" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" id="sample_form" class="form-horizontal">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ModalLabel">Confirmation</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h4 align="center" style="margin:0;">Are you sure you want to remove this data?</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" name="ok_button" id="ok_button" class="btn btn-danger">OK</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- /.content-wrapper -->
 
@@ -164,7 +233,7 @@
 <!-- ./wrapper -->
 
 <!-- jQuery -->
-<script src="/admin/plugins/jquery/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="/admin/plugins/jquery-ui/jquery-ui.min.js"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
@@ -201,8 +270,14 @@
 <script src="https://cdn.tiny.cloud/1/jxsqeq85qzdwuqqqruya91jqsrhqtxykhxtks6sn0t1kn69g/tinymce/5/tinymce.min.js"
         referrerpolicy="origin"></script>
 <script src="/admin/admin.js"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" />
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{ asset('js/employees_admin.js') }}"></script>
 </body>
 

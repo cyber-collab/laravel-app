@@ -163,7 +163,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
-
+        L5Swagger\L5SwaggerServiceProvider::class,
         /*
          * Package Service Providers...
          */

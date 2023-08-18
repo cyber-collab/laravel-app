@@ -23,6 +23,51 @@ $(function () {
         ]
     });
 
+    $('#create_record').click(function () {
+        $('.modal-title').text('Add New Employee');
+        $('#action_button').val('Add');
+        $('#action').val('Add');
+        $('#form_result').html('');
+        $('#name').val('');
+        $('#position').val('');
+
+        $('#formModal').modal('show');
+    });
+
+    $('#sample_form').on('submit', function (event) {
+        event.preventDefault();
+        let action_url = $('#sample_form').data('url');
+        $.ajax({
+            type: 'post',
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            url: action_url,
+            data: $(this).serialize(),
+            dataType: 'json',
+            success: function (data) {
+                var html = '';
+                if (data.errors) {
+                    html = '<div class="alert alert-danger">';
+                    for (var count = 0; count < data.errors.length; count++) {
+                        html += '<p>' + data.errors[count] + '</p>';
+                    }
+                    html += '</div>';
+                }
+                if (data.success) {
+                    html = '<div class="alert alert-success">' + data.success + '</div>';
+                    $('#sample_form')[0].reset();
+                    $('#employees-table').DataTable().ajax.reload();
+                    $('#formModal').modal('hide');
+                }
+                $('#form_result').html(html);
+            },
+            error: function (data) {
+                var errors = data.responseJSON;
+                console.log(errors);
+            }
+        });
+    });
+
+
     $('#employees-table').on('click', '.delete', function () {
         let employeeId = $(this).data('id');
         if (adminlte) {
@@ -43,4 +88,21 @@ $(function () {
             }
         }
     });
+
+    $('#employees-table').on('click', '.edit', function () {
+        let employeeId = $(this).data('id');
+
+        $.ajax({
+            url: '/employees/' + employeeId + '/edit',
+            type: 'GET',
+            success: function (data) {
+                $('#editEmployeeModal .modal-content').html(data);
+                $('#editEmployeeModal').modal('show');
+            },
+            error: function (data) {
+                console.log('Error:', data);
+            }
+        });
+    });
+
 });

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\EmployeeController;
 use Illuminate\Support\Facades\Route;
@@ -21,12 +22,14 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::resource('employees', EmployeeController::class);
+Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
+Route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
+Route::get('/employees/edit/{id}/', [EmployeeController::class, 'edit']);
+Route::post('/employees/update', [EmployeeController::class, 'update'])->name('employees.update');
+Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
 
 Route::middleware(['role:admin'])->prefix('admin_panel')->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\HomeController::class, 'index'])->name('homeAdmin');
 });
-
-Route::get('/employees/datatables', [EmployeeController::class, 'getDatatables'])->name('employees.index.datatables');
