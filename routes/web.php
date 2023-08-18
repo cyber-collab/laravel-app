@@ -24,11 +24,12 @@ Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
-Route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
-Route::get('/employees/edit/{id}/', [EmployeeController::class, 'edit']);
-Route::post('/employees/update', [EmployeeController::class, 'update'])->name('employees.update');
-Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
+Route::get('employees', [EmployeeController::class, 'index'])->name('employees.index');
+Route::post('employees/store', [EmployeeController::class, 'store'])->name('employees.store');
+Route::get('employees/edit/{id}/', [EmployeeController::class, 'edit']);
+Route::post('employees/update', [EmployeeController::class, 'update'])->name('employees.update');
+Route::get('employees/destroy/{id}/', [EmployeeController::class, 'destroy']);
+Route::get('employees/show/{id}/', [EmployeeController::class, 'show'])->name('employees.show');
 
 Route::middleware(['role:admin'])->prefix('admin_panel')->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\HomeController::class, 'index'])->name('homeAdmin');

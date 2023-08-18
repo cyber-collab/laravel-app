@@ -31,8 +31,6 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
-
-
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
@@ -41,7 +39,6 @@
                  class="brand-image img-circle elevation-3" style="opacity: .8">
             <span class="brand-text font-weight-light">Dashboard</span>
         </a>
-
         <!-- Sidebar -->
         <div class="sidebar">
             <!-- Sidebar user panel (optional) -->
@@ -50,8 +47,6 @@
                     <a href="#" class="d-block">{{ Auth::user()->name }}</a>
                 </div>
             </div>
-
-
             <!-- Sidebar Menu -->
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
@@ -128,99 +123,7 @@
     </aside>
 
     <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">List of employees</h3>
-            </div>
-            <div class="card-body">
-                <table class="table table-bordered" id="employees-table" data-url="{{ route('employees.index') }}">
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Position</th>
-                        <th>Date of employment</th>
-                        <th>Phone</th>
-                        <th>Email</th>
-                        <th>The amount of wages</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form method="post" id="sample_form" class="form-horizontal" data-url="{{ route('employees.store') }}">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="ModalLabel">Add New Employee</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <span id="form_result"></span>
-                            <div class="form-group">
-                                <label>Name:</label>
-                                <input type="text" name="name" id="name" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label>Position:</label>
-                                <input type="text" name="position" id="position" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label>Date of Employment:</label>
-                                <input type="date" name="hire_date" id="hire_date" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label>Phone:</label>
-                                <input type="text" name="phone_number" id="phone_number" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label>Email:</label>
-                                <input type="email" name="email" id="email" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label>Salary:</label>
-                                <input type="text" name="salary" id="salary" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label>Photo:</label>
-                                <input type="file" name="photo" id="photo" class="form-control" />
-                            </div>
-                            <input type="hidden" name="action" id="action" value="Add" />
-                            <input type="hidden" name="hidden_id" id="hidden_id" />
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <input type="submit" name="action_button" id="action_button" value="Add" class="btn btn-info" />
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form method="post" id="sample_form" class="form-horizontal">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="ModalLabel">Confirmation</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <h4 align="center" style="margin:0;">Are you sure you want to remove this data?</h4>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" name="ok_button" id="ok_button" class="btn btn-danger">OK</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+        @include('employees.index')
     <!-- /.content-wrapper -->
 
 
@@ -278,7 +181,6 @@
 <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{{ asset('js/employees_admin.js') }}"></script>
 </body>
 
 </html>

@@ -42,14 +42,14 @@
                 }
             }
         },
-        "/api/employees/{employee}": {
+        "/employees/{employee}": {
             "get": {
                 "tags": [
                     "Employees"
                 ],
                 "summary": "Show the specified employee",
                 "description": "Show the specified employee.",
-                "operationId": "c2a3a0ec2a75e78c2d9e622df0085a77",
+                "operationId": "ff3d329f590de859514cfd94cf0b4b28",
                 "parameters": [
                     {
                         "name": "employee",
@@ -78,7 +78,7 @@
                 ],
                 "summary": "Update the specified employee",
                 "description": "Update the specified employee.",
-                "operationId": "6e77188ef152be1ee6ec3321fcb02882",
+                "operationId": "b5aa398c601631a62e8a8cc6ccb1a434",
                 "parameters": [
                     {
                         "name": "employee",
@@ -89,6 +89,38 @@
                         }
                     }
                 ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "position": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "phone_number": {
+                                        "type": "string",
+                                        "maxLength": 20
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "salary": {
+                                        "type": "number",
+                                        "format": "float"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Successful operation"
@@ -110,7 +142,7 @@
                 ],
                 "summary": "Delete the specified employee",
                 "description": "Delete the specified employee.",
-                "operationId": "799db2e2d0fe3a7fb4c8dd8adb3484e7",
+                "operationId": "71d7d3f815312da55ebb33af3733d2fa",
                 "parameters": [
                     {
                         "name": "employee",

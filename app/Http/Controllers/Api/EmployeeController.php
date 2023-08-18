@@ -3,15 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\EmployeeStoreRequest;
-use App\Models\Employee;
-use App\Http\Resources\EmployeeResource;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Employee;
+use Yajra\DataTables\DataTables;
+
 use OpenApi\Annotations as OA;
 
 /**
@@ -22,125 +19,104 @@ use OpenApi\Annotations as OA;
  *     )
  * )
  */
+
 class EmployeeController extends Controller
 {
-    /**
-     * Get a list of employees.
-     *
-     * @param Request $request
-     * @return mixed
-     *
-     * @OA\Get(
-     *     path="/employees",
-     *     summary="Get a list of employees",
-     *     tags={"Employees"},
-     *     @OA\Response(response="200", description="Successful operation"),
-     *     @OA\Response(response="500", description="Server error"),
-     * )
-     */
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            return Employee::getEmployeesData();
+            $data = Employee::select('id', 'name', 'position', 'hire_date', 'phone_number', 'email', 'salary')->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($data) {
+                    $button = '<button type="button" name="edit" id="' . $data->id . '" class="edit btn btn-primary btn-sm"> <i class="bi bi-pencil-square"></i>Edit</button>';
+                    $button .= '<button type="button" name="delete" id="' . $data->id . '" class="delete btn btn-danger btn-sm"> <i class="bi bi-backspace-reverse-fill"></i> Delete</button>';
+                    return $button;
+                })
+                ->make(true);
         }
 
         return view('employees.index');
     }
 
-    /**
-     * Create a new employee.
-     *
-     * @param EmployeeStoreRequest $request
-     * @return JsonResponse
-     *
-     * @OA\Post(
-     *     path="/employees",
-     *     tags={"Employees"},
-     *     summary="Create a new employee",
-     *     @OA\Response(response="201", description="Employee created successfully"),
-     *     @OA\Response(response="422", description="Unprocessable Entity"),
-     *     @OA\Response(response="500", description="Server error"),
-     * )
-     */
-    public function store(EmployeeStoreRequest $request): JsonResponse
+    public function store(Request $request)
     {
-        $employee = Employee::create($request->validated());
+        $error = Validator::make($request->all(), $this->getValidationRules());
 
-        return response()->json([
-            'message' => 'Employee created successfully',
-            'employee' => new EmployeeResource($employee),
-        ], 201);
+        if ($error->fails()) {
+            return response()->json(['errors' => $error->errors()->all()]);
+        }
+
+        $form_data = [
+            'name' => $request->name,
+            'position' => $request->position,
+            'hire_date' => $request->hire_date,
+            'phone_number' => $request->phone_number,
+            'email' => $request->email,
+            'salary' => $request->salary,
+        ];
+
+        Employee::create($form_data);
+
+        return response()->json(['success' => 'Data Added successfully.']);
     }
 
-    /**
-     * Show the specified employee.
-     *
-     * @param Employee $employee
-     * @return Application|Factory|View
-     *
-     * @OA\Get(
-     *     path="/api/employees/{employee}",
-     *     summary="Show the specified employee",
-     *     tags={"Employees"},
-     *     @OA\Parameter(name="employee", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response="200", description="Successful operation"),
-     *     @OA\Response(response="404", description="Not found"),
-     *     @OA\Response(response="500", description="Server error"),
-     * )
-     */
-    public function show(Employee $employee)
+    public function edit($id): JsonResponse
     {
-        $employee = new EmployeeResource($employee);
+        if (request()->ajax()) {
+            $employee = Employee::findOrFail($id);
+        }
+        return response()->json(['result' => $employee ?? '']);
+    }
+
+    public function show(int $id)
+    {
+        $employee = Employee::findOrFail($id);
 
         return view('employees.show', compact('employee'));
     }
 
-    /**
-     * Update the specified employee.
-     *
-     * @param EmployeeStoreRequest $request
-     * @param Employee $employee
-     * @return EmployeeResource
-     *
-     * @OA\Put(
-     *     path="/api/employees/{employee}",
-     *     tags={"Employees"},
-     *     summary="Update the specified employee",
-     *     @OA\Parameter(name="employee", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response="200", description="Successful operation"),
-     *     @OA\Response(response="422", description="Unprocessable Entity"),
-     *     @OA\Response(response="404", description="Not found"),
-     *     @OA\Response(response="500", description="Server error"),
-     * )
-     */
-    public function update(EmployeeStoreRequest $request, Employee $employee): EmployeeResource
+    public function update(Request $request): JsonResponse
     {
-        $employee->update($request->validated());
+        $error = Validator::make($request->all(), $this->getValidationRules());
 
-        return new EmployeeResource($employee);
+        if ($error->fails()) {
+            return response()->json(['errors' => $error->errors()->all()]);
+        }
+
+        $form_data = [
+            'name' => $request->name,
+            'position' => $request->position,
+            'hire_date' => $request->hire_date,
+            'phone_number' => $request->phone_number,
+            'email' => $request->email,
+            'salary' => $request->salary,
+        ];
+
+        Employee::whereId($request->hidden_id)->update($form_data);
+
+        return response()->json(['success' => 'Data is successfully updated']);
     }
 
-    /**
-     * Delete the specified employee.
-     *
-     * @param Employee $employee
-     * @return JsonResponse
-     *
-     * @OA\Delete(
-     *     path="/api/employees/{employee}",
-     *     tags={"Employees"},
-     *     summary="Delete the specified employee",
-     *     @OA\Parameter(name="employee", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response="204", description="No Content"),
-     *     @OA\Response(response="404", description="Not found"),
-     *     @OA\Response(response="500", description="Server error"),
-     * )
-     */
-    public function destroy(Employee $employee): JsonResponse
+    public function destroy($id)
     {
+        $employee = Employee::findOrFail($id);
         $employee->delete();
 
-        return response()->json(null, Response::HTTP_NO_CONTENT);
+        return response()->json(['success' => 'Employee deleted successfully']);
+
     }
 
+    private function getValidationRules()
+    {
+        return [
+            'name' => 'required|string|max:255',
+            'position' => 'string|max:255',
+            'hire_date' => 'nullable|date',
+            'phone_number' => ['required', 'string', 'max:20', 'regex:/^\+380\d{9}$/u'],
+            'email' => 'required|string|email|max:255',
+            'salary' => ['required', 'numeric', 'between:0,9999999.99'],
+            'photo' => 'nullable|image|max:2048',
+        ];
+    }
 }

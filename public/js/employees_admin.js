@@ -1,4 +1,3 @@
-
 let csrfToken = $('meta[name="csrf-token"]').attr('content');
 $(function () {
     let table = $('#employees-table').DataTable({
@@ -36,9 +35,21 @@ $(function () {
 
     $('#sample_form').on('submit', function (event) {
         event.preventDefault();
-        let action_url = $('#sample_form').data('url');
+        let action_url = '';
+        let method = '';
+
+        if ($('#action').val() === 'Add') {
+            action_url = "/employees";
+            method = "POST";
+        }
+
+        if ($('#action').val() === 'Edit') {
+            action_url = "/employees/" + $('#hidden_id').val();
+            method = "PUT";
+        }
+
         $.ajax({
-            type: 'post',
+            type: method,
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
             url: action_url,
             data: $(this).serialize(),
@@ -67,11 +78,10 @@ $(function () {
         });
     });
 
-
     $('#employees-table').on('click', '.delete', function () {
         let employeeId = $(this).data('id');
-        if (adminlte) {
-            if (confirm('Ви впевнені, що хочете видалити цього співробітника?')) {
+
+            if (confirm('Are you sure you want to delete this employee?')) {
                 $.ajax({
                     url: '/employees/' + employeeId,
                     type: 'DELETE',
@@ -86,23 +96,36 @@ $(function () {
                     }
                 });
             }
-        }
     });
 
-    $('#employees-table').on('click', '.edit', function () {
-        let employeeId = $(this).data('id');
+    $(document).on('click', '.edit', function(event){
+        event.preventDefault();
+        let editButton = $(this);
+        let id = editButton.data('id');
+
+        $('#form_result').html('');
 
         $.ajax({
-            url: '/employees/' + employeeId + '/edit',
-            type: 'GET',
-            success: function (data) {
-                $('#editEmployeeModal .modal-content').html(data);
-                $('#editEmployeeModal').modal('show');
+            url: "employees/" + id + "/edit",
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            dataType: "json",
+            success: function(data) {
+                console.log('success: ' + data);
+                $('#name').val(data.result.name);
+                $('#email').val(data.result.email);
+                $('#hidden_id').val(id);
+                $('.modal-title').text('Edit Record');
+                $('#action_button').val('Update');
+                $('#action').val('Edit');
+                $('.editpass').hide();
+                $('#formModal').modal('show');
+                table.draw();
             },
-            error: function (data) {
-                console.log('Error:', data);
+
+            error: function(data) {
+                let errors = data.responseJSON;
+                console.log(errors);
             }
         });
     });
-
 });
