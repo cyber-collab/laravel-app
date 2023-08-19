@@ -5,11 +5,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" />
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body>
 <div class="content-wrapper">
@@ -59,6 +59,7 @@
                 {data: 'phone_number', name: 'phone_number'},
                 {data: 'email', name: 'email'},
                 {data: 'salary', name: 'salary'},
+                // {data: "photo", name: 'photo'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ]
         });
@@ -85,10 +86,13 @@
             {
                 action_url = "{{ route('employees.update') }}";
             }
-
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
             $.ajax({
                 type: 'post',
-                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                 url: action_url,
                 data:$(this).serialize(),
                 dataType: 'json',
@@ -125,18 +129,20 @@
 
             $.ajax({
                 url :"/employees/edit/" + id + "/",
-                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                 dataType:"json",
                 success:function(data)
                 {
                     console.log('success: '+data);
                     $('#name').val(data.result.name);
                     $('#email').val(data.result.email);
+                    $('#position').val(data.result.position);
+                    $('#hire_date').val(data.result.hire_date);
+                    $('#salary').val(data.result.salary);
+                    $('#phone_number').val(data.result.phone_number);
                     $('#hidden_id').val(id);
                     $('.modal-title').text('Edit Record');
                     $('#action_button').val('Update');
                     $('#action').val('Edit');
-                    $('.editpass').hide();
                     $('#formModal').modal('show');
                 },
                 error: function(data) {
