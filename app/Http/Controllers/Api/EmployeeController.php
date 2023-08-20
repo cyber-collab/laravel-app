@@ -152,7 +152,6 @@ class EmployeeController extends Controller
         if (!$employee) {
             return response()->json(['error' => 'Employee not found']);
         }
-        $positionId = Position::where('name', $request->position)->value('id');
 
         if ($request->hasFile('photo')) {
             $file = $request->file('photo');
@@ -167,7 +166,7 @@ class EmployeeController extends Controller
 
         $employeeData = [
             'name' => $request->name,
-            'position' => $positionId,
+            'position_id' => $request->position,
             'hire_date' => $request->hire_date,
             'phone_number' => $request->phone_number,
             'email' => $request->email,
