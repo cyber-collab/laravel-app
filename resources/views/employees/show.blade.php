@@ -3,6 +3,7 @@
 <head>
     <title>{{ $employee->name }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ asset('css/employee.css') }}" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -11,6 +12,7 @@
     <div class="row">
         <div class="col-md-6">
             <h2>{{ $employee->name }}</h2>
+            <div class="employee-photo" style="background-image: url('{{ asset('images/' . $employee->photo) }}');"></div>
             <p><strong>Position:</strong> {{ $employee->position }}</p>
             <p><strong>Date of Employment:</strong> {{ $employee->hire_date }}</p>
             <p><strong>Phone:</strong> {{ $employee->phone_number }}</p>

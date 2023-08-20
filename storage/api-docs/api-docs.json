@@ -42,14 +42,14 @@
                 }
             }
         },
-        "/employees/{employee}": {
+        "/employees/show/{employee}": {
             "get": {
                 "tags": [
                     "Employees"
                 ],
                 "summary": "Show the specified employee",
                 "description": "Show the specified employee.",
-                "operationId": "ff3d329f590de859514cfd94cf0b4b28",
+                "operationId": "4cf7f9b079efcfdba14a4c176b19bef0",
                 "parameters": [
                     {
                         "name": "employee",
@@ -71,7 +71,9 @@
                         "description": "Server error"
                     }
                 }
-            },
+            }
+        },
+        "/employees/{employee}": {
             "put": {
                 "tags": [
                     "Employees"
@@ -89,38 +91,6 @@
                         }
                     }
                 ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "maxLength": 255
-                                    },
-                                    "position": {
-                                        "type": "string",
-                                        "maxLength": 255
-                                    },
-                                    "phone_number": {
-                                        "type": "string",
-                                        "maxLength": 20
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "maxLength": 255
-                                    },
-                                    "salary": {
-                                        "type": "number",
-                                        "format": "float"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "200": {
                         "description": "Successful operation"
@@ -135,14 +105,16 @@
                         "description": "Server error"
                     }
                 }
-            },
+            }
+        },
+        "employees/{employee}": {
             "delete": {
                 "tags": [
                     "Employees"
                 ],
                 "summary": "Delete the specified employee",
                 "description": "Delete the specified employee.",
-                "operationId": "71d7d3f815312da55ebb33af3733d2fa",
+                "operationId": "50fe339c9dffe0e8b7a535104c9f7341",
                 "parameters": [
                     {
                         "name": "employee",
@@ -159,6 +131,43 @@
                     },
                     "404": {
                         "description": "Not found"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "/positions/create": {
+            "post": {
+                "tags": [
+                    "Positions"
+                ],
+                "summary": "Create a new position",
+                "description": "Create a new employee.",
+                "operationId": "843b39bad8068697bf9e057b41dcbfc7",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Employee created successfully"
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity"
                     },
                     "500": {
                         "description": "Server error"

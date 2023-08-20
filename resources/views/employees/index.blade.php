@@ -10,8 +10,14 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" />
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <link href="{{ asset('css/employee.css') }}" rel="stylesheet">
 </head>
 <body>
+<li class="nav-item">
+    <div align="right">
+        <button type="button" name="create_position_record" id="create_position_record" class="btn btn-success"> <i class="bi bi-plus-square"></i> Add Position</button>
+    </div>
+</li>
 <div class="content-wrapper">
     <div class="card">
         <div class="card-header">
@@ -21,6 +27,7 @@
             <table class="table table-bordered employees-table" id="employees-table" data-url="{{ route('employees.index') }}">
                 <thead>
                 <tr>
+                    <th>Photo</th>
                     <th>Name</th>
                     <th>Position</th>
                     <th>Date of employment</th>
@@ -37,6 +44,7 @@
     </div>
     @include('employees.modal');
     @include('employees.confirm_modal');
+    @include('positions.create');
 </div>
 </body>
 <script type="text/javascript">
@@ -46,7 +54,12 @@
             serverSide: true,
             ajax: "{{ route('employees.index') }}",
             columns: [
-                { data: 'name', name: 'name',
+                {data: 'photo', name: 'photo',
+                    render: function(data) {
+                        return "<img src='/images/" + data + "' height='50' class='employee-photo-list' />";
+                    }
+                },
+                {data: 'name', name: 'name',
                     render: function (data, type, row ) {
                         if (type === 'display') {
                             data = '<a href="/employees/show/' + row.id + '">' + data + '</a>';
@@ -54,16 +67,14 @@
                         return data;
                     }
                 },
-                {data: 'position', name: 'position'},
+                {data: 'position.name', name: 'position.name'},
                 {data: 'hire_date', name: 'hire_date'},
                 {data: 'phone_number', name: 'phone_number'},
                 {data: 'email', name: 'email'},
                 {data: 'salary', name: 'salary'},
-                // {data: "photo", name: 'photo'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ]
         });
-
         $('#create_record').click(function(){
             $('.modal-title').text('Add New Employee');
             $('#action_button').val('Add');
@@ -122,6 +133,38 @@
             });
         });
 
+        $('#create_position_record').click(function(){
+            $('.modal-title').text('Add New Position');
+            $('#position_action_button').val('Add');
+            $('#position_form_result').html('');
+
+            $('#positionFormModal').modal('show');
+        });
+
+        $('#position_form').on('submit', function(event){
+            event.preventDefault();
+            let action_url = $(this).data('url');
+
+            $.ajax({
+                type: 'post',
+                url: action_url,
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(data) {
+                    let html = '';
+                    if (data.success) {
+                        html = '<div class="alert alert-success">' + data.success + '</div>';
+                        $('#position_form')[0].reset();
+                    }
+                    $('#position_form_result').html(html);
+                },
+                error: function(data) {
+                    let errors = data.responseJSON;
+                    console.log(errors);
+                }
+            });
+        });
+
         $(document).on('click', '.edit', function(event){
             event.preventDefault();
             let id = $(this).attr('id'); alert(id);
@@ -135,15 +178,28 @@
                     console.log('success: '+data);
                     $('#name').val(data.result.name);
                     $('#email').val(data.result.email);
-                    $('#position').val(data.result.position);
+                    $('#position').val(data.result.position_id);
                     $('#hire_date').val(data.result.hire_date);
                     $('#salary').val(data.result.salary);
                     $('#phone_number').val(data.result.phone_number);
+                    if (data.result.photo) {
+                        $('#photo-preview').attr('src', '{{ asset('images') }}/' + data.result.photo + '?rand=' + Math.random());
+                    } else {
+                        $('#photo-preview').attr('src', '');
+                    }
+                    $("#employee_id").val(data.result.id);
+                    $("#employee_photo").val(data.result.photo);
                     $('#hidden_id').val(id);
                     $('.modal-title').text('Edit Record');
                     $('#action_button').val('Update');
                     $('#action').val('Edit');
                     $('#formModal').modal('show');
+                    const positionSelect = $('#position');
+                    positionSelect.empty();
+                    $.each(data.positions, function(index, position) {
+                        positionSelect.append(new Option(position.name, position.id));
+                    });
+                    positionSelect.val(data.current_position).change();
                 },
                 error: function(data) {
                     let errors = data.responseJSON;

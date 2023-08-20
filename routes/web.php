@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\HomeController;
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\EmployeeController;
+use App\Http\Controllers\PositionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,6 +30,11 @@ Route::get('employees/edit/{id}/', [EmployeeController::class, 'edit']);
 Route::post('employees/update', [EmployeeController::class, 'update'])->name('employees.update');
 Route::get('employees/destroy/{id}/', [EmployeeController::class, 'destroy']);
 Route::get('employees/show/{id}/', [EmployeeController::class, 'show'])->name('employees.show');
+Route::get('positions/autocomplete', [PositionController::class, 'autocompletePositions'])->name('positions.autocomplete');
+
+
+Route::resource('positions', PositionController::class);
+
 
 Route::middleware(['role:admin'])->prefix('admin_panel')->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\HomeController::class, 'index'])->name('homeAdmin');

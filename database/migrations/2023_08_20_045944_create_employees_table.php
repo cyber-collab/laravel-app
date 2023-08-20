@@ -18,12 +18,12 @@ class CreateEmployeesTable extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('position');
+            $table->foreignId('position_id')->constrained('positions');
             $table->date('hire_date');
             $table->string('phone_number');
             $table->string('email');
             $table->decimal('salary', 10, 2);
-            $table->string('photo')->nullable();
+            $table->string('photo', 300)->nullable();
             $table->timestamps();
             $table->unsignedBigInteger('admin_created_id')->nullable();
             $table->unsignedBigInteger('admin_updated_id')->nullable();

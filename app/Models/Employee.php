@@ -10,21 +10,16 @@ class Employee extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'position', 'hire_date', 'phone_number', 'email', 'salary', 'photo'];
+    protected $fillable = ['name', 'hire_date', 'phone_number', 'email', 'salary', 'photo', 'position_id'];
 
-    public function manager()
+    public function position()
     {
-        return $this->belongsTo(Employee::class, 'manager_id');
-    }
-
-    public function subordinates()
-    {
-        return $this->hasMany(Employee::class, 'manager_id');
+        return $this->belongsTo(Position::class, 'position_id');
     }
 
     public static function getEmployeesData()
     {
-        $data = Employee::select(['id', 'name', 'position', 'hire_date', 'phone_number', 'email', 'salary', 'photo']);
+        $data = Employee::with('position')->select(['id', 'name', 'hire_date', 'phone_number', 'email', 'salary', 'photo', 'position_id']);
 
         return Datatables::of($data)
             ->addIndexColumn()
@@ -45,7 +40,7 @@ class Employee extends Model
             'phone_number' => ['required', 'string', 'max:20', 'regex:/^\+380\d{9}$/u'],
             'email' => 'required|string|email|max:255',
             'salary' => ['required', 'numeric', 'between:0,9999999.99'],
-            'photo' => 'nullable|image|max:2048',
+            'photo' => 'nullable|image|mimes:jpeg,png|max:5000',
         ];
     }
 }
