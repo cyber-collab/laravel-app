@@ -22,11 +22,14 @@
     <link rel="stylesheet" href="/admin/plugins/jqvmap/jqvmap.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="/admin/dist/css/adminlte.min.css">
+    <link href="{{ asset('css/position.css') }}" rel="stylesheet">
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="/admin/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
     <!-- Daterange picker -->
     <link rel="stylesheet" href="/admin/plugins/daterangepicker/daterangepicker.css">
     <link href="/admin/dist/css/colorbox.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -93,9 +96,7 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="{{ route('positions.index') }}" class="nav-link">
-                                    <p>All position</p>
-                                </a>
+                                @include('positions.index')
                             </li>
                             <li class="nav-item">
                                 <div align="right">
@@ -103,6 +104,11 @@
                                 </div>
                             </li>
                         </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" id="delete_position_record">
+                            <p>Delete Position</p>
+                        </a>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link" onclick="document.getElementById('logout-form').submit()">
@@ -181,5 +187,4 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

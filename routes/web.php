@@ -25,13 +25,11 @@ Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('employees', [EmployeeController::class, 'index'])->name('employees.index');
-Route::post('employees/store', [EmployeeController::class, 'store'])->name('employees.store');
+Route::post('employees', [EmployeeController::class, 'store'])->name('employees.store');
 Route::get('employees/edit/{id}/', [EmployeeController::class, 'edit']);
 Route::post('employees/update', [EmployeeController::class, 'update'])->name('employees.update');
 Route::get('employees/destroy/{id}/', [EmployeeController::class, 'destroy']);
 Route::get('employees/show/{id}/', [EmployeeController::class, 'show'])->name('employees.show');
-Route::get('positions/autocomplete', [PositionController::class, 'autocompletePositions'])->name('positions.autocomplete');
-
 
 Route::resource('positions', PositionController::class);
 

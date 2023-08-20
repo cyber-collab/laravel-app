@@ -26,11 +26,13 @@ class HomeController extends Controller
     public function index()
     {
         $employee = Employee::all()->count();
-        $position = Position::all()->count();
+        $position_count = Position::all()->count();
+        $positions = Position::all();
 
         return view('admin.home.index', [
             'employee_count' => $employee,
-            'position_count' => $position
+            'position_count' => $position_count,
+            'positions' => $positions,
         ]);
     }
 }

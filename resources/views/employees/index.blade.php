@@ -40,6 +40,8 @@
     @include('employees.modal');
     @include('employees.confirm_modal');
     @include('positions.create');
+    @include('positions.edit_position');
+    @include('positions.delete_position');
 </div>
 </body>
 <script type="text/javascript">
@@ -152,38 +154,6 @@
                         $('#employees-table').DataTable().ajax.reload();
                     }
                     $('#form_result').html(html);
-                },
-                error: function(data) {
-                    let errors = data.responseJSON;
-                    console.log(errors);
-                }
-            });
-        });
-
-        $('#create_position_record').click(function(){
-            $('.modal-title').text('Add New Position');
-            $('#position_action_button').val('Add');
-            $('#position_form_result').html('');
-
-            $('#positionFormModal').modal('show');
-        });
-
-        $('#position_form').on('submit', function(event){
-            event.preventDefault();
-            let action_url = $(this).data('url');
-
-            $.ajax({
-                type: 'post',
-                url: action_url,
-                data: $(this).serialize(),
-                dataType: 'json',
-                success: function(data) {
-                    let html = '';
-                    if (data.success) {
-                        html = '<div class="alert alert-success">' + data.success + '</div>';
-                        $('#position_form')[0].reset();
-                    }
-                    $('#position_form_result').html(html);
                 },
                 error: function(data) {
                     let errors = data.responseJSON;
