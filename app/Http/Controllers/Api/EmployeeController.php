@@ -9,7 +9,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Employee;
@@ -49,45 +48,6 @@ class EmployeeController extends Controller
         }
 
         return view('employees.index');
-    }
-
-    /**
-     * Create a new employee.
-     *
-     * @OA\Post(
-     *     path="/employees",
-     *     tags={"Employees"},
-     *     summary="Create a new employee",
-     *     @OA\Response(response="201", description="Employee created successfully"),
-     *     @OA\Response(response="422", description="Unprocessable Entity"),
-     *     @OA\Response(response="500", description="Server error"),
-     * )
-     */
-    public function store(Request $request): JsonResponse
-    {
-        $error = Validator::make($request->all(), Employee::getValidationRules());
-
-        if ($error->fails()) {
-            return response()->json(['errors' => $error->errors()->all()]);
-        }
-
-        $file = $request->file('photo');
-        $fileName = time() . '.' . $file->getClientOriginalExtension();
-        $file->storeAs('public/storage/images', $fileName);
-
-        $formData = [
-            'name' => $request->name,
-            'position' => $request->position,
-            'hire_date' => $request->hire_date,
-            'phone_number' => $request->phone_number,
-            'email' => $request->email,
-            'salary' => $request->salary,
-            'photo' => $fileName,
-        ];
-
-        Employee::create($formData);
-
-        return response()->json(['success' => 'Data Added successfully.']);
     }
 
     public function edit($id): JsonResponse
@@ -177,6 +137,45 @@ class EmployeeController extends Controller
         $employee->update($employeeData);
 
         return response()->json(['success' => 'Data is successfully updated']);
+    }
+
+    /**
+     * Create a new employee.
+     *
+     * @OA\Post(
+     *     path="/employees",
+     *     tags={"Employees"},
+     *     summary="Create a new employee",
+     *     @OA\Response(response="201", description="Employee created successfully"),
+     *     @OA\Response(response="422", description="Unprocessable Entity"),
+     *     @OA\Response(response="500", description="Server error"),
+     * )
+     */
+    public function store(Request $request): JsonResponse
+    {
+        $error = Validator::make($request->all(), Employee::getValidationRules());
+
+        if ($error->fails()) {
+            return response()->json(['errors' => $error->errors()->all()]);
+        }
+
+//        $file = $request->file('photo');
+//        $fileName = time() . '.' . $file->getClientOriginalExtension();
+//        $file->storeAs('public/images', $fileName); //php artisan storage:link
+
+        $formData = [
+            'name' => $request->name,
+            'position_id' => $request->position,
+            'hire_date' => $request->hire_date,
+            'phone_number' => $request->phone_number,
+            'email' => $request->email,
+            'salary' => $request->salary,
+//            'photo' => $fileName,
+        ];
+
+        Employee::create($formData);
+
+        return response()->json(['success' => 'Data Added successfully.']);
     }
 
     /**

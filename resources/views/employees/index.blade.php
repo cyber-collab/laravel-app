@@ -13,11 +13,6 @@
     <link href="{{ asset('css/employee.css') }}" rel="stylesheet">
 </head>
 <body>
-<li class="nav-item">
-    <div align="right">
-        <button type="button" name="create_position_record" id="create_position_record" class="btn btn-success"> <i class="bi bi-plus-square"></i> Add Position</button>
-    </div>
-</li>
 <div class="content-wrapper">
     <div class="card">
         <div class="card-header">
@@ -75,13 +70,45 @@
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ]
         });
+
         $('#create_record').click(function(){
+            $('#name').val('');
+            $('#email').val('');
+            $('#hire_date').val('');
+            $('#salary').val('');
+            $('#phone_number').val('');
+            $('#photo-preview').attr('src', '');
+
             $('.modal-title').text('Add New Employee');
             $('#action_button').val('Add');
             $('#action').val('Add');
             $('#form_result').html('');
 
-            $('#formModal').modal('show');
+            $.ajax({
+                url: "{{ route('positions.index') }}",
+                dataType: "json",
+                success: function(data) {
+                    const positionSelect = $('#position');
+                    positionSelect.empty();
+                    $.each(data, function(index, position) {
+                        positionSelect.append(new Option(position.name, position.id));
+                    });
+
+                    $('#position').on('change', function() {
+                        const selectedPositionId = $(this).val();
+                        const selectedPosition = data.find(position => position.id == selectedPositionId);
+                        if (selectedPosition) {
+                            console.log("Selected Position:", selectedPosition.name);
+                        }
+                    });
+
+                    $('#formModal').modal('show');
+                },
+                error: function(data) {
+                    let errors = data.responseJSON;
+                    console.log(errors);
+                }
+            });
         });
 
         $('#sample_form').on('submit', function(event){

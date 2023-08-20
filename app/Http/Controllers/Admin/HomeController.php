@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
+use App\Models\Position;
 
 class HomeController extends Controller
 {
@@ -25,9 +26,11 @@ class HomeController extends Controller
     public function index()
     {
         $employee = Employee::all()->count();
+        $position = Position::all()->count();
 
         return view('admin.home.index', [
-            'employee_count' => $employee
+            'employee_count' => $employee,
+            'position_count' => $position
         ]);
     }
 }

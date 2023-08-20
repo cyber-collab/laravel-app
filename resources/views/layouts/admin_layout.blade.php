@@ -58,7 +58,7 @@
                         <a href="{{ route('homeAdmin') }}" class="nav-link">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
                             <p>
-                                Главная
+                                Main page
                             </p>
                         </a>
                     </li>
@@ -78,7 +78,7 @@
                             </li>
                             <li class="nav-item">
                                 <div align="right">
-                                    <button type="button" name="create_record" id="create_record" class="btn btn-success"> <i class="bi bi-plus-square"></i> Add</button>
+                                    <button type="button" name="create_record" id="create_record" class="btn btn-success"> <i class="bi bi-plus-square"></i>Add new Employee</button>
                                 </div>
                             </li>
                         </ul>
@@ -87,23 +87,22 @@
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-align-left"></i>
-                            <p>
-                                Категории
+                            <p>Positions - {{ $position_count }}
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
-                        {{--                        <ul class="nav nav-treeview">--}}
-                        {{--                            <li class="nav-item">--}}
-                        {{--                                <a href="{{ route('category.index') }}" class="nav-link">--}}
-                        {{--                                    <p>Все категории</p>--}}
-                        {{--                                </a>--}}
-                        {{--                            </li>--}}
-                        {{--                            <li class="nav-item">--}}
-                        {{--                                <a href="{{ route('category.create') }}" class="nav-link">--}}
-                        {{--                                    <p>Добавить категорию</p>--}}
-                        {{--                                </a>--}}
-                        {{--                            </li>--}}
-                        {{--                        </ul>--}}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('positions.index') }}" class="nav-link">
+                                    <p>All position</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <div align="right">
+                                    <button type="button" name="create_position_record" id="create_position_record" class="btn btn-success"> <i class="bi bi-plus-square"></i>Add Position</button>
+                                </div>
+                            </li>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link" onclick="document.getElementById('logout-form').submit()">
