@@ -86,10 +86,14 @@
             $('#action').val('Add');
             $('#form_result').html('');
 
+            let storedData;
+
             $.ajax({
                 url: "{{ route('positions.index') }}",
                 dataType: "json",
                 success: function(data) {
+                    storedData = data;
+                    console.log(storedData);
                     const positionSelect = $('#position');
                     positionSelect.empty();
                     $.each(data, function(index, position) {
@@ -98,12 +102,11 @@
 
                     $('#position').on('change', function() {
                         const selectedPositionId = $(this).val();
-                        const selectedPosition = data.find(position => position.id == selectedPositionId);
+                        const selectedPosition = storedData.find(position => position.id == selectedPositionId);
                         if (selectedPosition) {
                             console.log("Selected Position:", selectedPosition.name);
                         }
                     });
-
                     $('#formModal').modal('show');
                 },
                 error: function(data) {

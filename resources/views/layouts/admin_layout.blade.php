@@ -80,13 +80,13 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <div align="right">
+                                <div class="add-button">
                                     <button type="button" name="create_record" id="create_record" class="btn btn-success"> <i class="bi bi-plus-square"></i>Add new Employee</button>
                                 </div>
                             </li>
+
                         </ul>
                     </li>
-
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-align-left"></i>
@@ -104,11 +104,6 @@
                                 </div>
                             </li>
                         </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" id="delete_position_record">
-                            <p>Delete Position</p>
-                        </a>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link" onclick="document.getElementById('logout-form').submit()">

@@ -3,7 +3,7 @@
         <li class="list-group-item d-flex justify-content-between align-items-center">
             <span class="position-name">{{ $position->name }}</span>
             <div class="btn-group">
-                <button class="btn btn-xs btn-info edit_position_button" data-position-id="{{ $position->id }}"><i class="fas fa-edit"></i> Edit</button>
+                <button class="btn btn-xs btn-info edit_position_button" data-position-id="{{ $position->id }}"><i class="fas fa-edit"></i></button>
                 <button class="btn btn-xs btn-danger delete_position_button" data-position-id="{{ $position->id }}"><i class="fas fa-trash"></i> Delete</button>
             </div>
         </li>

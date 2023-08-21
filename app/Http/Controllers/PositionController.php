@@ -16,11 +16,16 @@ class PositionController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Application|Factory|View
+     * @return JsonResponse
      */
-    public function index(): Application|Factory|View
+    public function index(Request $request): JsonResponse|View
     {
         $positions = Position::all();
+
+        if ($request->expectsJson()) {
+            return response()->json($positions);
+        }
+
         return view('positions.index', compact('positions'));
     }
 
