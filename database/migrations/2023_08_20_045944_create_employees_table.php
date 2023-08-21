@@ -24,6 +24,8 @@ class CreateEmployeesTable extends Migration
             $table->string('email');
             $table->decimal('salary', 10, 2);
             $table->string('photo', 300)->nullable();
+            $table->unsignedBigInteger('manager_id')->nullable();
+            $table->foreign('manager_id')->references('id')->on('employees');
             $table->timestamps();
             $table->unsignedBigInteger('admin_created_id')->nullable();
             $table->unsignedBigInteger('admin_updated_id')->nullable();

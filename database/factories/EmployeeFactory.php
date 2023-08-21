@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Employee;
 use App\Models\Position;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -27,20 +28,10 @@ class EmployeeFactory extends Factory
         ];
     }
 
-//    public function configure()
-//    {
-//        return $this->afterCreating(function (Employee $employee) {
-//            $employees = Employee::factory()->count(rand(0, 5))->create();
-//
-//            foreach ($employees as $subordinate) {
-//                $relationshipType = rand(0, 1) ? 'manager' : 'employee';
-//
-//                if ($relationshipType === 'manager') {
-//                    $employee->managers()->attach($subordinate, ['relationship_type' => $relationshipType]);
-//                } else {
-//                    $employee->employees()->attach($subordinate, ['relationship_type' => $relationshipType]);
-//                }
-//            }
-//        });
-//    }
+    protected function getRandomManagerId()
+    {
+        $randomEmployee = Employee::inRandomOrder()->first();
+
+        return $randomEmployee ? $randomEmployee->id : null;
+    }
 }

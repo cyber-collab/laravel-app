@@ -9,6 +9,8 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Employee;
@@ -132,10 +134,11 @@ class EmployeeController extends Controller
             'email' => $request->email,
             'salary' => $request->salary,
             'photo' => $fileName,
+            'admin_updated_id' => Auth::id(),
         ];
-
         $employee->update($employeeData);
 
+        Log::info("Info" . $employee);
         return response()->json(['success' => 'Data is successfully updated']);
     }
 
@@ -170,7 +173,9 @@ class EmployeeController extends Controller
             'phone_number' => $request->phone_number,
             'email' => $request->email,
             'salary' => $request->salary,
+            'manager_id' => $request->manager_id,
 //            'photo' => $fileName,
+            'admin_created_id' => Auth::id(),
         ];
 
         Employee::create($formData);
