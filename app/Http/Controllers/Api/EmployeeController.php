@@ -27,7 +27,21 @@ use OpenApi\Annotations as OA;
  */
 class EmployeeController extends Controller
 {
-    private array $formData = [];
+    private array $formData;
+
+    public function __construct(Request $request)
+    {
+        $this->formData = [
+            'name' => $request->name,
+            'position_id' => $request->position,
+            'hire_date' => $request->hire_date,
+            'phone_number' => $request->phone_number,
+            'email' => $request->email,
+            'salary' => $request->salary,
+            'admin_updated_id' => Auth::id(),
+            'manager_level' => $request->manager_level,
+        ];
+    }
 
     /**
      * Get a list of employees.
@@ -92,6 +106,7 @@ class EmployeeController extends Controller
     /**
      * Update the specified employee.
      *
+     * TODO need fix image
      *
      * @OA\Put(
      *     path="/employees/{employee}",
@@ -131,17 +146,11 @@ class EmployeeController extends Controller
             $fileName = $request->employee_photo;
         }
 
-        $employeeData = [
-            'name' => $request->name,
-            'position_id' => $request->position,
-            'hire_date' => $request->hire_date,
-            'phone_number' => $request->phone_number,
-            'email' => $request->email,
-            'salary' => $request->salary,
-            'photo' => $fileName,
-            'admin_updated_id' => Auth::id(),
-            'manager_level' => $request->manager_level,
-        ];
+        $employeeData = array_merge(
+            $this->formData,
+            ['photo' => $fileName]
+        );
+
         $employee->update($employeeData);
 
         return response()->json(['success' => 'Data is successfully updated']);
@@ -149,6 +158,8 @@ class EmployeeController extends Controller
 
     /**
      * Create a new employee.
+     *
+     * TODO need fix image
      *
      * @OA\Post(
      *     path="/employees",
@@ -167,24 +178,11 @@ class EmployeeController extends Controller
         if ($error->fails()) {
             return response()->json(['errors' => $error->errors()->all()]);
         }
+//        $file = $request->file('photo');
+//        $fileName = time() . '.' . $file->getClientOriginalExtension();
+//        $file->storeAs(public_path('images'), $fileName);
 
-        $file = $request->file('photo');
-        $fileName = time() . '.' . $file->getClientOriginalExtension();
-        $file->storeAs(public_path('images'), $fileName);
-
-        $formData = [
-            'name' => $request->name,
-            'position_id' => $request->position,
-            'hire_date' => $request->hire_date,
-            'phone_number' => $request->phone_number,
-            'email' => $request->email,
-            'salary' => $request->salary,
-            'manager_id' => $request->manager_id,
-            'photo' => $fileName,
-            'admin_created_id' => Auth::id(),
-        ];
-
-        Employee::create($formData);
+        Employee::create($this->formData);
 
         return response()->json(['success' => 'Data Added successfully.']);
     }
