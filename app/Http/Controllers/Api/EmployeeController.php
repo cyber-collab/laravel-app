@@ -123,9 +123,9 @@ class EmployeeController extends Controller
         if ($request->hasFile('photo')) {
             $file = $request->file('photo');
             $fileName = time().'.'.$file->getClientOriginalExtension();
-            $file->storeAs('public/images', $fileName);
+            $file->storeAs('storage/images', $fileName);
             if ($employee->photo) {
-                Storage::delete('/public/images/'.$employee->photo);
+                Storage::delete(public_path('images').$employee->photo);
             }
         } else {
             $fileName = $request->employee_photo;
@@ -143,8 +143,6 @@ class EmployeeController extends Controller
             'manager_level' => $request->manager_level,
         ];
         $employee->update($employeeData);
-
-        Log::info('Info'.$employee);
 
         return response()->json(['success' => 'Data is successfully updated']);
     }
@@ -171,8 +169,8 @@ class EmployeeController extends Controller
         }
 
         $file = $request->file('photo');
-        $fileName = time().'.'.$file->getClientOriginalExtension();
-        $file->storeAs('public/images', $fileName); //php artisan storage:link
+        $fileName = time() . '.' . $file->getClientOriginalExtension();
+        $file->storeAs(public_path('images'), $fileName);
 
         $formData = [
             'name' => $request->name,

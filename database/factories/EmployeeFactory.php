@@ -22,7 +22,7 @@ class EmployeeFactory extends Factory
             'email' => $this->faker->safeEmail,
             'salary' => $this->faker->randomFloat(2, 30000, 150000),
             'manager_level' => $this->faker->numberBetween(1, 5),
-            'photo' => $this->faker->image('public/images', 300, 300, null, false),
+            'photo' => $this->faker->image(public_path('images'), 300, 300, null, false),
         ];
     }
 
