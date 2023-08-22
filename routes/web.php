@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Api\EmployeeController;
-use App\Http\Controllers\PositionController;
+use App\Http\Controllers\Api\PositionController;
 use Illuminate\Support\Facades\Route;
 
 /*
