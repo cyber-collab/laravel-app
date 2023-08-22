@@ -13,7 +13,7 @@
         <div class="col-md-6">
             <h2>{{ $employee->name }}</h2>
             <div class="employee-photo" style="background-image: url('{{ asset('images/' . $employee->photo) }}');"></div>
-            <p><strong>Position:</strong> {{ $employee->position }}</p>
+            <p><strong>Position:</strong> {{ $employee->position->name }}</p>
             <p><strong>Date of Employment:</strong> {{ $employee->hire_date }}</p>
             <p><strong>Phone:</strong> {{ $employee->phone_number }}</p>
             <p><strong>Email:</strong> {{ $employee->email }}</p>

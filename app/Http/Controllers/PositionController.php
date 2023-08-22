@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Employee;
 use App\Models\Position;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -42,9 +39,7 @@ class PositionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
      * @return Response
-     *
      */
     public function store(Request $request): JsonResponse
     {
@@ -69,7 +64,6 @@ class PositionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
      * @param  int  $id
      * @return Response
      */
@@ -77,7 +71,7 @@ class PositionController extends Controller
     {
         $position = Position::find($id);
 
-        if (!$position) {
+        if (! $position) {
             return response()->json(['error' => 'Position not found']);
         }
 
@@ -96,7 +90,7 @@ class PositionController extends Controller
     {
         $position = Position::find($id);
 
-        if (!$position) {
+        if (! $position) {
             return response()->json(['error' => 'Position not found'], 404);
         }
 
@@ -113,7 +107,7 @@ class PositionController extends Controller
     {
         $position = Position::findOrFail($id);
 
-        if (!$position) {
+        if (! $position) {
             return response()->json(['error' => 'Position not found']);
         }
 
@@ -125,5 +119,4 @@ class PositionController extends Controller
 
         return response()->json(['success' => 'Position deleted successfully.']);
     }
-
 }

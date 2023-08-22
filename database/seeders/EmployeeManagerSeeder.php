@@ -18,7 +18,10 @@ class EmployeeManagerSeeder extends Seeder
 
         foreach ($employees as $employee) {
             $randomManager = Employee::inRandomOrder()->first();
-            $employee->update(['manager_id' => $randomManager->id]);
+
+            $employee->update([
+                'manager_id' => $randomManager->id,
+            ]);
         }
     }
 }

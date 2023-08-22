@@ -6,10 +6,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" />
-    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
     <link href="{{ asset('css/employee.css') }}" rel="stylesheet">
 </head>
 <body>
@@ -29,6 +26,7 @@
                     <th>Phone</th>
                     <th>Email</th>
                     <th>The amount of wages</th>
+                    <th>Current manager</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -44,6 +42,8 @@
     @include('positions.delete_position');
 </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         let table = $('.employees-table').DataTable({
@@ -69,6 +69,7 @@
                 {data: 'phone_number', name: 'phone_number'},
                 {data: 'email', name: 'email'},
                 {data: 'salary', name: 'salary'},
+                {data: 'manager_name', name: 'manager_name'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ]
         });
@@ -93,7 +94,6 @@
                 dataType: "json",
                 success: function(data) {
                     storedData = data;
-                    console.log(storedData);
                     const positionSelect = $('#position');
                     positionSelect.empty();
                     $.each(data, function(index, position) {
@@ -175,6 +175,13 @@
                 dataType:"json",
                 success:function(data)
                 {
+                    const positionSelect = $('#position');
+                    positionSelect.empty();
+                    $.each(data.positions, function(index, position) {
+                        positionSelect.append(new Option(position.name, position.id));
+                    });
+                    positionSelect.val(data.current_position).change();
+
                     console.log('success: '+data);
                     $('#name').val(data.result.name);
                     $('#email').val(data.result.email);
@@ -194,12 +201,7 @@
                     $('#action_button').val('Update');
                     $('#action').val('Edit');
                     $('#formModal').modal('show');
-                    const positionSelect = $('#position');
-                    positionSelect.empty();
-                    $.each(data.positions, function(index, position) {
-                        positionSelect.append(new Option(position.name, position.id));
-                    });
-                    positionSelect.val(data.current_position).change();
+
                 },
                 error: function(data) {
                     let errors = data.responseJSON;

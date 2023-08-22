@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
 use App\Models\Position;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -13,18 +14,17 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Employee;
 use OpenApi\Annotations as OA;
 
 /**
  * @OA\OpenApi(
+ *
  *     @OA\Info(
  *         title="API Documentation",
  *         version="1.0.0"
  *     )
  * )
  */
-
 class EmployeeController extends Controller
 {
     private array $formData = [];
@@ -32,13 +32,13 @@ class EmployeeController extends Controller
     /**
      * Get a list of employees.
      *
-     * @param Request $request
      * @return mixed
      *
      * @OA\Get(
      *     path="/employees",
      *     summary="Get a list of employees",
      *     tags={"Employees"},
+     *
      *     @OA\Response(response="200", description="Successful operation"),
      *     @OA\Response(response="500", description="Server error"),
      * )
@@ -46,7 +46,7 @@ class EmployeeController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-           return Employee::getEmployeesData();
+            return Employee::getEmployeesData();
         }
 
         return view('employees.index');
@@ -58,11 +58,12 @@ class EmployeeController extends Controller
             $employee = Employee::findOrFail($id);
             $positions = Position::all();
         }
+
         return response()->json([
             'result' => $employee ?? '',
             'positions' => $positions ?? '',
             'current_position' => $employee->position_id ?? null,
-            ]
+        ]
         );
     }
 
@@ -73,7 +74,9 @@ class EmployeeController extends Controller
      *     path="/employees/show/{employee}",
      *     summary="Show the specified employee",
      *     tags={"Employees"},
+     *
      *     @OA\Parameter(name="employee", in="path", required=true, @OA\Schema(type="integer")),
+     *
      *     @OA\Response(response="200", description="Successful operation"),
      *     @OA\Response(response="404", description="Not found"),
      *     @OA\Response(response="500", description="Server error"),
@@ -94,7 +97,9 @@ class EmployeeController extends Controller
      *     path="/employees/{employee}",
      *     tags={"Employees"},
      *     summary="Update the specified employee",
+     *
      *     @OA\Parameter(name="employee", in="path", required=true, @OA\Schema(type="integer")),
+     *
      *     @OA\Response(response="200", description="Successful operation"),
      *     @OA\Response(response="422", description="Unprocessable Entity"),
      *     @OA\Response(response="404", description="Not found"),
@@ -111,16 +116,16 @@ class EmployeeController extends Controller
 
         $employee = Employee::find($request->employee_id);
 
-        if (!$employee) {
+        if (! $employee) {
             return response()->json(['error' => 'Employee not found']);
         }
 
         if ($request->hasFile('photo')) {
             $file = $request->file('photo');
-            $fileName = time() . '.' . $file->getClientOriginalExtension();
+            $fileName = time().'.'.$file->getClientOriginalExtension();
             $file->storeAs('public/images', $fileName);
             if ($employee->photo) {
-                Storage::delete('/public/images/' . $employee->photo);
+                Storage::delete('/public/images/'.$employee->photo);
             }
         } else {
             $fileName = $request->employee_photo;
@@ -135,10 +140,12 @@ class EmployeeController extends Controller
             'salary' => $request->salary,
             'photo' => $fileName,
             'admin_updated_id' => Auth::id(),
+            'manager_level' => $request->manager_level,
         ];
         $employee->update($employeeData);
 
-        Log::info("Info" . $employee);
+        Log::info('Info'.$employee);
+
         return response()->json(['success' => 'Data is successfully updated']);
     }
 
@@ -149,6 +156,7 @@ class EmployeeController extends Controller
      *     path="/employees",
      *     tags={"Employees"},
      *     summary="Create a new employee",
+     *
      *     @OA\Response(response="201", description="Employee created successfully"),
      *     @OA\Response(response="422", description="Unprocessable Entity"),
      *     @OA\Response(response="500", description="Server error"),
@@ -162,9 +170,9 @@ class EmployeeController extends Controller
             return response()->json(['errors' => $error->errors()->all()]);
         }
 
-//        $file = $request->file('photo');
-//        $fileName = time() . '.' . $file->getClientOriginalExtension();
-//        $file->storeAs('public/images', $fileName); //php artisan storage:link
+        $file = $request->file('photo');
+        $fileName = time().'.'.$file->getClientOriginalExtension();
+        $file->storeAs('public/images', $fileName); //php artisan storage:link
 
         $formData = [
             'name' => $request->name,
@@ -174,7 +182,7 @@ class EmployeeController extends Controller
             'email' => $request->email,
             'salary' => $request->salary,
             'manager_id' => $request->manager_id,
-//            'photo' => $fileName,
+            'photo' => $fileName,
             'admin_created_id' => Auth::id(),
         ];
 
@@ -190,7 +198,9 @@ class EmployeeController extends Controller
      *     path="employees/{employee}",
      *     tags={"Employees"},
      *     summary="Delete the specified employee",
+     *
      *     @OA\Parameter(name="employee", in="path", required=true, @OA\Schema(type="integer")),
+     *
      *     @OA\Response(response="204", description="No Content"),
      *     @OA\Response(response="404", description="Not found"),
      *     @OA\Response(response="500", description="Server error"),
@@ -199,6 +209,11 @@ class EmployeeController extends Controller
     public function destroy($id): JsonResponse
     {
         $employee = Employee::findOrFail($id);
+
+        $newManagerId = $employee->manager_id;
+
+        Employee::where('manager_id', $employee->id)->update(['manager_id' => $newManagerId]);
+
         $employee->delete();
 
         return response()->json(['success' => 'Employee deleted successfully']);

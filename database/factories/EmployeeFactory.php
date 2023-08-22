@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Employee;
 use App\Models\Position;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -10,10 +9,8 @@ class EmployeeFactory extends Factory
 {
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
-    public function definition()
+    public function definition(): array
     {
         $positionIds = Position::pluck('id')->toArray();
 
@@ -21,17 +18,18 @@ class EmployeeFactory extends Factory
             'name' => $this->faker->name,
             'position_id' => $this->faker->randomElement($positionIds),
             'hire_date' => $this->faker->date,
-            'phone_number' => $this->faker->phoneNumber,
+            'phone_number' => $this->generateUkrainianPhoneNumber(),
             'email' => $this->faker->safeEmail,
             'salary' => $this->faker->randomFloat(2, 30000, 150000),
-//            'photo' => $this->faker->image('public/images',300,300, null, false)
+            'manager_level' => $this->faker->numberBetween(1, 5),
+            'photo' => $this->faker->image('public/images', 300, 300, null, false),
         ];
     }
 
-    protected function getRandomManagerId()
+    public function generateUkrainianPhoneNumber(): string
     {
-        $randomEmployee = Employee::inRandomOrder()->first();
+        $number = mt_rand(1000000000, 9999999999);
 
-        return $randomEmployee ? $randomEmployee->id : null;
+        return '+380'.substr($number, 1);
     }
 }

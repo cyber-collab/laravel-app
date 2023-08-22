@@ -26,6 +26,7 @@ class CreateEmployeesTable extends Migration
             $table->string('photo', 300)->nullable();
             $table->unsignedBigInteger('manager_id')->nullable();
             $table->foreign('manager_id')->references('id')->on('employees');
+            $table->unsignedInteger('manager_level')->nullable();
             $table->timestamps();
             $table->unsignedBigInteger('admin_created_id')->nullable();
             $table->unsignedBigInteger('admin_updated_id')->nullable();
@@ -34,7 +35,6 @@ class CreateEmployeesTable extends Migration
             $table->foreign('admin_updated_id')->references('id')->on('users');
         });
     }
-
 
     /**
      * Reverse the migrations.
