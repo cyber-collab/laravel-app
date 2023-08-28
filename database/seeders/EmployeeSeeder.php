@@ -14,6 +14,11 @@ class EmployeeSeeder extends Seeder
      */
     public function run()
     {
-        Employee::factory(50000)->create();
+        $totalEmployees = 50000;
+        $chunkSize = 500;
+
+        for ($i = 0; $i < $totalEmployees; $i += $chunkSize) {
+            Employee::factory($chunkSize)->create();
+        }
     }
 }

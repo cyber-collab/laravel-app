@@ -14,14 +14,21 @@ class EmployeeManagerSeeder extends Seeder
      */
     public function run()
     {
-        $employees = Employee::all();
+        $chunkSize = 1000;
 
-        foreach ($employees as $employee) {
-            $randomManager = Employee::inRandomOrder()->first();
+        $totalEmployees = Employee::count();
+        $totalChunks = ceil($totalEmployees / $chunkSize);
 
-            $employee->update([
-                'manager_id' => $randomManager->id,
-            ]);
+        $randomManagerIds = Employee::inRandomOrder()->pluck('id')->toArray();
+
+        for ($i = 0; $i < $totalChunks; $i++) {
+            $employeeIds = Employee::skip($i * $chunkSize)->take($chunkSize)->pluck('id')->toArray();
+            $randomManagerId = $randomManagerIds[array_rand($randomManagerIds)];
+            $employeeIdsString = implode(',', $employeeIds);
+
+            $sql = "UPDATE employees SET manager_id = $randomManagerId WHERE id IN ($employeeIdsString)";
+            \DB::statement($sql);
         }
     }
+
 }

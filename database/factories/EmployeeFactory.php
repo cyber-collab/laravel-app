@@ -12,7 +12,13 @@ class EmployeeFactory extends Factory
      */
     public function definition(): array
     {
-        $positionIds = Position::pluck('id')->toArray();
+        $positionIdsChunks = Position::pluck('id')->chunk(500);
+
+        $positionIds = [];
+
+        $positionIdsChunks->each(function ($chunk) use (&$positionIds) {
+            $positionIds = array_merge($positionIds, $chunk->toArray());
+        });
 
         return [
             'name' => $this->faker->name,
@@ -22,7 +28,7 @@ class EmployeeFactory extends Factory
             'email' => $this->faker->safeEmail,
             'salary' => $this->faker->randomFloat(2, 30000, 150000),
             'manager_level' => $this->faker->numberBetween(1, 5),
-            'photo' => $this->faker->image(public_path('images'), 300, 300, null, false),
+            'photo' => '0d08065911a085eb6623a065470489ff.png',
         ];
     }
 
