@@ -23,7 +23,7 @@ class EmployeeFactory extends Factory
         return [
             'name' => $this->faker->name,
             'position_id' => $this->faker->randomElement($positionIds),
-            'hire_date' => $this->faker->date,
+            'hire_date' => $this->faker->dateTimeBetween('2013-01-01', '2023-12-31')->format('Y-m-d'),
             'phone_number' => $this->generateUkrainianPhoneNumber(),
             'email' => $this->faker->safeEmail,
             'salary' => $this->faker->randomFloat(2, 30000, 150000),
