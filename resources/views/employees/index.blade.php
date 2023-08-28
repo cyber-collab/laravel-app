@@ -11,7 +11,7 @@
 </head>
 <body>
 <div class="content-wrapper">
-    <div class="card">
+    <div class="card" id="app">
         <div class="card-header">
             <h3 class="card-title">List of employees</h3>
         </div>
@@ -53,6 +53,7 @@
             columns: [
                 {data: 'photo', name: 'photo',
                     render: function(data) {
+                   console.debug(data);
                         return "<img src='/images/" + data + "' height='50' class='employee-photo-list' />";
                     }
                 },

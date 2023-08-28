@@ -19,12 +19,7 @@ class PositionController extends Controller
     public function index(Request $request): JsonResponse|View
     {
         $positions = Position::all();
-
-        if ($request->expectsJson()) {
-            return response()->json($positions);
-        }
-
-        return view('positions.index', compact('positions'));
+        return response()->json($positions);
     }
 
     /**

@@ -59,11 +59,9 @@ class EmployeeController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->ajax()) {
-            return Employee::getEmployeesData();
-        }
+        $employees = Employee::all();
 
-        return view('employees.index');
+        return response()->json($employees);
     }
 
     public function edit($id): JsonResponse

@@ -14,7 +14,7 @@ class EmployeeSeeder extends Seeder
      */
     public function run()
     {
-        $totalEmployees = 50000;
+        $totalEmployees = 500;
         $chunkSize = 500;
 
         for ($i = 0; $i < $totalEmployees; $i += $chunkSize) {
